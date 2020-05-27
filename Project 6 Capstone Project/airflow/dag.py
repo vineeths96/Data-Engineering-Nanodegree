@@ -40,6 +40,12 @@ with DAG(dag_id='capstone_dag',
     # Dummy start task
     start = DummyOperator(task_id='start_execution')
 
+    # Create AWS Redshift cluster
+    create_cluster = BashOperator(
+        task_id='create_redshift_cluster',
+        bash_command='python aws_cluster_create.py'
+    )
+
     # Upload static datasets to S3 bucket
     upload_data_s3 = BashOperator(
         task_id='upload_data_to_s3',
@@ -195,6 +201,11 @@ with DAG(dag_id='capstone_dag',
         conn_id='{{ redshift_conn_id }}'
     )
 
+    # Destroy AWS Redshift cluster
+    destroy_cluster = BashOperator(
+        task_id='destroy_redshift_cluster',
+        bash_command='python aws_cluster_destroy.py'
+    )
     # Dummy end task
     end = DummyOperator(task_id='stop_execution')
 
@@ -207,9 +218,9 @@ with DAG(dag_id='capstone_dag',
     """
 
     # Stream historical tweets
-    start >> upload_data_s3 >> stream_historical_tweet >> create_tables >> [stage_tweets,
-                                                                            stage_happiness,
-                                                                            stage_temperature]
+    start >> create_cluster >> upload_data_s3 >> stream_historical_tweet >> create_tables >> [stage_tweets,
+                                                                                              stage_happiness,
+                                                                                              stage_temperature]
 
     [stage_tweets >> check_tweets,
      stage_happiness >> check_happiness,
@@ -223,4 +234,4 @@ with DAG(dag_id='capstone_dag',
      load_sources_table >> check_sources_dim,
      load_happiness_table >> check_happiness_dim,
      load_temperature_table >> check_temperature_dim,
-     load_time_table >> check_time] >> end
+     load_time_table >> check_time] >> destroy_cluster >> end

@@ -2,7 +2,8 @@ import boto3
 import json
 import time
 import configparser
-import pandas as pd
+from airflow import settings
+from airflow.models import Connection
 
 # AWS config parameters
 KEY = None
@@ -220,6 +221,7 @@ def aws_open_redshift_port(ec2, redshift):
 
 
 def main():
+    global DWH_CLUSTER_IDENTIFIER, DWH_DB_USER, DWH_DB_PASSWORD, DWH_PORT
     config_parser()
 
     ec2 = aws_resource('ec2', "us-west-2")
@@ -246,6 +248,23 @@ def main():
 
             time.sleep(30)
         print("Cluster creation successful.\n")
+
+        # Add Redshift to Airflow connections
+        myClusterProps = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
+        DWH_ENDPOINT = myClusterProps['Endpoint']['Address']
+
+        conn = Connection(
+            conn_id='redshift',
+            conn_type='Postgres',
+            host=DWH_ENDPOINT,
+            login=DWH_DB_USER,
+            password=DWH_DB_PASSWORD,
+            port=DWH_PORT
+        )
+
+        session = settings.Session()
+        session.add(conn)
+        session.commit()
         
 
 if __name__ == '__main__':
