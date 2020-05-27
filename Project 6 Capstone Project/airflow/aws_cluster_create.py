@@ -3,7 +3,9 @@ import json
 import time
 import configparser
 from airflow import settings
+from airflow.models import Variable
 from airflow.models import Connection
+
 
 # AWS config parameters
 KEY = None
@@ -221,7 +223,8 @@ def aws_open_redshift_port(ec2, redshift):
 
 
 def main():
-    global DWH_CLUSTER_IDENTIFIER, DWH_DB_USER, DWH_DB_PASSWORD, DWH_PORT
+    global DWH_CLUSTER_IDENTIFIER, DWH_IAM_ROLE_NAME
+    global DWH_DB_USER, DWH_DB_PASSWORD, DWH_PORT
     config_parser()
 
     ec2 = aws_resource('ec2', "us-west-2")
@@ -265,6 +268,9 @@ def main():
         session = settings.Session()
         session.add(conn)
         session.commit()
+
+        # Add role to Variables
+        Variable.set("aws_iam_role", DWH_IAM_ROLE_NAME)
         
 
 if __name__ == '__main__':

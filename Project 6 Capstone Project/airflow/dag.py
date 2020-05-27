@@ -206,6 +206,7 @@ with DAG(dag_id='capstone_dag',
         task_id='destroy_redshift_cluster',
         bash_command='python aws_cluster_destroy.py'
     )
+
     # Dummy end task
     end = DummyOperator(task_id='stop_execution')
 
