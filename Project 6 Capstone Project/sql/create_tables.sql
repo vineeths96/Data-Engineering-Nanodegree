@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     name varchar(256),
     nickname varchar(256),
     description varchar(256),
-    location varchar(256),
+    location varchar(256) NOT NULL,
     followers_count int4,
     tweets_count int4,
     creation_date timestamp,
@@ -68,21 +68,21 @@ CREATE TABLE IF NOT EXISTS public.happiness (
     country varchar(256) NOT NULL,
     rank int2 NOT NULL,
     score decimal NOT NULL,
-    economy decimal,
-    family decimal,
-    health decimal,
-    freedom decimal,
-    trust decimal,
-    geneorsity decimal,
-    dystopia decimal,
+    economy decimal NOT NULL,
+    family decimal NOT NULL,
+    health decimal NOT NULL,
+    freedom decimal NOT NULL,
+    trust decimal NOT NULL,
+    geneorsity decimal NOT NULL,
+    dystopia decimal NOT NULL,
     CONSTRAINT happiness.pkey PRIMARY KEY (country)
 );
 
 CREATE TABLE IF NOT EXISTS public.temperature (
-    country varchar(256),
-    temp_last_20 decimal,
-    temp_last_50 decimal,
-    temp_last_100 decimal,
+    country varchar(256) NOT NULL,
+    temp_last_20 decimal NOT NULL,
+    temp_last_50 decimal NOT NULL,
+    temp_last_100 decimal NOT NULL,
     CONSTRAINT temperature.pkey PRIMARY KEY (country)
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS public.tweets (
     favs int4,
     retweets int4,
     creation_date timestamp,
-    location varchar(256),
+    location varchar(256) NOT NULL,
     user_id varchar(256),
     source varchar(256),
     happy_rank int2,

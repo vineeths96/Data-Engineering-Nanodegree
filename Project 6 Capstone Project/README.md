@@ -28,7 +28,11 @@ Twitter is one of the most popular social networking website in the world. Every
 
 ### Project Description
 
-In this project, we combine [Twitter](https://www.twitter.com) data, [World happiness index](https://www.kaggle.com/unsdsn/world-happiness) data and [Earth surface temperature data](https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data) data to explore whether there is any correlation between the above.  The Twitter data is dynamic and the other two dataset are static in nature. The general idea of this project is to extract Twitter data, analyze its sentiment and use the resulting data to gain insights with the other datasets. The entire process is orchestrated using Apache Airflow and is triggered automatically to run on daily schedule.
+#### Scope the Project and Gather Data
+
+In this project, we combine [Twitter](https://www.twitter.com) data, [World happiness index](https://www.kaggle.com/unsdsn/world-happiness) data and [Earth surface temperature data](https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data) data to explore whether there is any correlation between the above.  The Twitter data is dynamic and the other two dataset are static in nature. The general idea of this project is to extract Twitter data, analyze its sentiment and use the resulting data to gain insights with the other datasets. For instance, we could answer interesting questions like whether positive or negative tweets are correlated with the happiness index of the country a person is residing in, or, is there a relationship between the sentiment of a tweet and the temperature change in a country a user is living in? 
+
+The entire process is orchestrated using Apache Airflow and is triggered automatically to run on daily schedule. The key tools used for this project AWS Redhift, AWS S3, AWS Kinesis and AWS Comprehend.
 
 We choose one or more specific area of interests and extract the tweets related to those from Twitter. We can use the [tweepy](https://www.tweepy.org/) python library to access Twitter API and extract tweets data. We can set up the the Airflow to work in either of the two modes (by commenting/uncommenting line in the Airflow [DAG](./airflow/dag.py). 
 
@@ -37,11 +41,35 @@ We choose one or more specific area of interests and extract the tweets related 
 | Historical Tweet mode | In this mode, the tweet data from the past days (from given date of beginning) are collected, organized into batches and uploaded. In this mode there are no time constraints, and hence basic preprocessing (such as removing unnecessary fields from tweet JSON) and sentiment extraction are done before uploading. |
 | Real time Stream mode | In this mode, the tweet data from real time stream are collected and uploaded. Since we are streaming real time data, additional tasks such as preprocessing and sentiment extraction creates an overhead. Hence, the tweet stream are not processed and the tweet JSON data is uploaded as is. |
 
-We use [AWS Comprehend](https://aws.amazon.com/comprehend/), which is a NLP service provided by AWS, to extract the sentiment from the tweet. As mentioned above, in [Historical Tweet mode](./airflow/search_tweets.py) we do the sentiment extraction before uploading and in [Real time Stream mode](./airflow/stream_tweets.py) we should setup our data pipelines to do the sentiment extraction after uploading. For the sake of this project, I have used `Historical Tweet mode` since real time streaming large amount of tweet data takes a significant amount of time. As of implementing this project, I ran this project on my local machine but deploying them on the cloud would be better due to its high reliability, availability and fault tolerance. We can use cloud services such as [AWS EC2](https://aws.amazon.com/ec2)  to deploy the tweet streaming (or even the whole project) for this purpose.
+We use [AWS Comprehend](https://aws.amazon.com/comprehend/), which is a NLP service provided by AWS, to extract the sentiment from the tweet. As mentioned above, in [Historical Tweet mode](./airflow/search_tweets.py) we do the sentiment extraction before uploading and in [Real time Stream mode](./airflow/stream_tweets.py) we should setup our data pipelines to do the sentiment extraction after uploading.
 
-The tweet data is typically generated at high speeds, especially in the `Real time Stream mode`, and normal data uploading techniques often fails. We use [AWS Kinesis](https://aws.amazon.com/kinesis/), which is a real time streaming and analysis service provided by AWS, to ingest tweet data into [AWS S3](https://aws.amazon.com/s3). AWS S3 acts a data lake storing our static and dynamic data for further processing. We then stage the tweet data, temperature data and happiness index data on [AWS Redshift](https://aws.amazon.com/redshift/) and convert them to fact and dimensions tables (Star Schema) on AWS Redshift. This would allow us to answer insightful questions on the data and can be used for business analytics. 
+#### Explore and Assess the Data
 
-Implementing the data stores and data warehouses on the cloud brings in lots of advantages. We can scale our resources vertically or horizontally as per our real time requirements with few clicks (or CLI commands). We can do the above much faster than implementing an on-premise resource with much less human working hours. We can also provide efficient access to our applications around the world by spreading our deployments to multiple regions.
+For the sake of this project, I have used `Historical Tweet mode` since real time streaming large amount of tweet data takes a significant amount of time. As of implementing this project, I ran this project on my local machine but deploying them on the cloud would be better due to its high reliability, availability and fault tolerance. We can use cloud services such as [AWS EC2](https://aws.amazon.com/ec2)  to deploy the tweet streaming (or even the whole project) for this purpose.
+
+A quick data exploration and quality assessment was done on the datasets using Jupyter notebook [here](./notebooks/Exploratory Data Analysis.ipynb).  The happiness index data had no issues - no duplicates and no missing values. The temperature data contained some NULL values (around 4%), and the corresponding records were dropped before uploading to AWS S3. The tweet data, since being obtained from dynamic Twitter API, had standardization issues. For example, the location entries contained entries like "earth", some entries had city-country format and others had countries alone. If we process the tweet location data using some geographical tools, we could get the exact country location we wanted to.
+
+#### Define the Data Model
+
+The Star Database Schema (Fact and Dimension Schema) is used for data modeling in this ETL pipeline. There is one fact table containing all the metrics (facts) associated to each tweet and five dimensions tables, containing associated information such as user, source etc. This model enables to search the database schema with the minimum number of *SQL JOIN*s possible and enable fast read queries. 
+
+![database](./images/database.png)
+
+|        Table        |                         Description                          |
+| :-----------------: | :----------------------------------------------------------: |
+|   staging_tweets    |                 Staging table for tweet data                 |
+|  staging_happiness  |         Staging table for world happiness index data         |
+| staging_temperature |              Staging table for temperature data              |
+|        users        | Dimension table containing user information derived from staging_tweets |
+|       sources       | Dimension table containing sources (Android/iPhone) derived from staging_tweets |
+|      happiness      | Dimension table containing happiness data derived from staging_happiness |
+|     temperature     | Dimension table containing temperature data derived from staging_temperature |
+|       tweets        | Fact table containing tweet information, happiness index and temperature derived from all three staging tables |
+
+> NB: The data dictionary [DATADICT](DATADICT.md) contains a description of every attribute for all tables listed above.
+
+Using this data model, we can finally answer questions regarding relationships between tweets, their sentiment, 
+users, their location, happiness scores by country and variations in temperature by country.
 
 **DAG Operations**
 
@@ -65,39 +93,31 @@ The Airflow DAG is set up to execute the following steps sequentially.
 
 > NB: Step 2 and Step 12 are only for demonstration purpose. By creating a separate DAG to create cluster which executes only once, we can deploy this model to run daily until manual interruption.
 
+#### Run ETL to Model the Data
+
+The tweet data is typically generated at high speeds, especially in the `Real time Stream mode`, and normal data uploading techniques often fails. We use [AWS Kinesis](https://aws.amazon.com/kinesis/), which is a real time streaming and analysis service provided by AWS, to ingest tweet data into [AWS S3](https://aws.amazon.com/s3). AWS S3 acts a data lake storing our static and dynamic data for further processing. We then stage the tweet data, temperature data and happiness index data on [AWS Redshift](https://aws.amazon.com/redshift/) and convert them to fact and dimensions tables (Star Schema) on AWS Redshift. This would allow us to answer insightful questions on the data and can be used for business analytics. 
+
+Implementing the data stores and data warehouses on the cloud brings in lots of advantages. We can scale our resources vertically or horizontally as per our real time requirements with few clicks (or CLI commands). We can do the above much faster than implementing an on-premise resource with much less human working hours. We can also provide efficient access to our applications around the world by spreading our deployments to multiple regions.
+
+##### Data quality checks
+
+* Integrity checks
+
+  The relational database has integrity checks in place with the use of PRIMARY KEYs in fact and dimensional tables. These keys ensure that these values are UNIQUE and NOT NULL. The tables for Happiness Index and Temperature data have NOT NULL constraints for their entries - since we have already explored them and made sure that they are not NULL. The LOCATION attribute in the tweets table has the NOT NULL constraint since we intend to use that field for analytics. We cannot be stringent about the NULL values in other attributes of the tweets table since the data is dynamic and may have missing values in fields we do not require in this project.
+
+* Source/Count checks
+
+  Source count checks have been implemented in the Airflow DAGs using the CheckOperator and ValueCheckOperator. Since we already know the number of entries in the static datasets we could use the ValueCheckOperator to check all the entries have been inserted. Since we don't know the entries for dynamic tweet data we could use the CheckOperator  to check any entries have been made to the table.
+
 ### Built With
 
 * python
+
 * Apache Airflow
+
 * Amazon Web Services
 
-
-
-## Database Schema Design
-
-### Data Model ERD
-
-The Star Database Schema (Fact and Dimension Schema) is used for data modeling in this ETL pipeline. There is one fact table containing all the metrics (facts) associated to each tweet and five dimensions tables, containing associated information such as user, source etc. This model enables to search the database schema with the minimum number of *SQL JOIN*s possible and enable fast read queries. 
-
-![database](./images/database.png)
-
-|        Table        |                         Description                          |
-| :-----------------: | :----------------------------------------------------------: |
-|   staging_tweets    |                 Staging table for tweet data                 |
-|  staging_happiness  |         Staging table for world happiness index data         |
-| staging_temperature |              Staging table for temperature data              |
-|        users        | Dimension table containing user information derived from staging_tweets |
-|       sources       | Dimension table containing sources (Android/iPhone) derived from staging_tweets |
-|      happiness      | Dimension table containing happiness data derived from staging_happiness |
-|     temperature     | Dimension table containing temperature data derived from staging_temperature |
-|       tweets        | Fact table containing tweet information, happiness index and temperature derived from all three staging tables |
-
-> NB: The data dictionary [DATADICT.md](DATADICT.md) contains a description of every attribute for all tables listed above.
-
-Using this data model, we can finally answer questions regarding relationships between tweets, their sentiment, 
-users, their location, happiness scores by country and variations in temperature by country.
-
-
+  
 
 ## Apache Airflow Orchestration 
 
