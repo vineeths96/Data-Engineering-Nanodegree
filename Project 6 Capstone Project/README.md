@@ -109,6 +109,8 @@ Implementing the data stores and data warehouses on the cloud brings in lots of 
 
   Source count checks have been implemented in the Airflow DAGs using the CheckOperator and ValueCheckOperator. Since we already know the number of entries in the static datasets we could use the ValueCheckOperator to check all the entries have been inserted. Since we don't know the entries for dynamic tweet data we could use the CheckOperator to check any entries have been made to the table.
 
+
+
 ### Tools and Technologies used
 
 * [python](https://www.python.org/)
@@ -174,7 +176,7 @@ As the static datasets do not change on a daily basis, the major challenge here 
 
 #### 3. Database needs to be accessed by 100+ users simultaneously
 
-We are using cloud based services, which can be easily given access to the 100+ users. If a group of users work on a specific subset of data or have an expensive query, we can also explore creating duplicate tables for them (if possible). 
+We are using cloud based services, which can be easily given access to the 100+ users. To improve the performance, we need more CPU resources with increased user count. Using a distributed database, we can to improve oour replications and partitioning to get faster query results for each user. If a group of users work on a specific subset of data or have an expensive query, we can also explore creating duplicate tables for them (if possible). 
 
 
 
@@ -190,7 +192,7 @@ Files in this repository:
 |       sql        | Folder at the root of the project, where SQL commands are stored |
 |    config.cfg    |                  Sample configuration file                   |
 | requirements.txt |             Python environment requirements file             |
-|     DATADICT     | Data Dictionary file with explanation of attributes of tables |
+|   DATADICT.md    | Data Dictionary file with explanation of attributes of tables |
 |    README.md     |                         Readme file                          |
 
 
