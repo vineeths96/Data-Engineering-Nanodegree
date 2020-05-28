@@ -24,13 +24,13 @@
 
 ## About The Project
 
-Twitter is one of the most popular social networking website in the world. Every second, on average, around 8,000 tweets are tweeted on Twitter, which corresponds to over 450,000 tweets sent per minute, 650 million tweets per day and around 250 billion tweets per year. As claimed by the official site, Twitter data is the most comprehensive source of live, public conversation worldwide.  Furthermore, Twitter allows developers to access their tweet data through their APIs that enable programmatic analysis of data in real-time or back to the first Tweet in 2006. This project aims to utilize the tweet data and combine the data with world happiness index data and earth surface temperature data and warehouse them on AWS. The Twitter data extraction could be limited to specific topics/hash-tags as per requirements which allows us to explore various domains.
+Twitter is one of the most popular social networking website in the world. Every second, on average, around 8,000 tweets are tweeted on Twitter, which corresponds to over 450,000 tweets sent per minute, 650 million tweets per day and around 250 billion tweets per year. As claimed by the official site, Twitter data is the most comprehensive source of live, public conversation worldwide. Furthermore, Twitter allows developers to access their tweet data through their APIs that enable programmatic analysis of data in real-time or back to the first Tweet in 2006. This project aims to utilize the tweet data and combine the data with world happiness index data and earth surface temperature data and warehouse them on AWS. The Twitter data extraction could be limited to specific topics/hash-tags as per requirements which allows us to explore various domains.
 
 ### Project Description
 
 #### Scope the Project and Gather Data
 
-In this project, we combine [Twitter](https://www.twitter.com) data, [World happiness index](https://www.kaggle.com/unsdsn/world-happiness) data and [Earth surface temperature data](https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data) data to explore whether there is any correlation between the above.  The Twitter data is dynamic and the other two dataset are static in nature. The general idea of this project is to extract Twitter data, analyze its sentiment and use the resulting data to gain insights with the other datasets. For instance, we could answer interesting questions like whether positive or negative tweets are correlated with the happiness index of the country a person is residing in, or, is there a relationship between the sentiment of a tweet and the temperature change in a country a user is living in? 
+In this project, we combine [Twitter](https://www.twitter.com) data, [World happiness index](https://www.kaggle.com/unsdsn/world-happiness) data and [Earth surface temperature data](https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data) data to explore whether there is any correlation between the above. The Twitter data is dynamic and the other two dataset are static in nature. The general idea of this project is to extract Twitter data, analyze its sentiment and use the resulting data to gain insights with the other datasets. For instance, we could answer interesting questions like whether positive or negative tweets are correlated with the happiness index of the country a person is residing in, or, is there a relationship between the sentiment of a tweet and the temperature change in a country a user is living in? 
 
 The entire process is orchestrated using Apache Airflow and is triggered automatically to run on daily schedule. The key tools used for this project AWS Redhift, AWS S3, AWS Kinesis and AWS Comprehend.
 
@@ -45,9 +45,9 @@ We use [AWS Comprehend](https://aws.amazon.com/comprehend/), which is a NLP serv
 
 #### Explore and Assess the Data
 
-For the sake of this project, I have used `Historical Tweet mode` since real time streaming large amount of tweet data takes a significant amount of time. As of implementing this project, I ran this project on my local machine but deploying them on the cloud would be better due to its high reliability, availability and fault tolerance. We can use cloud services such as [AWS EC2](https://aws.amazon.com/ec2)  to deploy the tweet streaming (or even the whole project) for this purpose.
+For the sake of this project, I have used `Historical Tweet mode` since real time streaming large amount of tweet data takes a significant amount of time. As of implementing this project, I ran this project on my local machine but deploying them on the cloud would be better due to its high reliability, availability and fault tolerance. We can use cloud services such as [AWS EC2](https://aws.amazon.com/ec2) to deploy the tweet streaming (or even the whole project) for this purpose.
 
-A quick data exploration and quality assessment was done on the datasets using Jupyter notebook [here](./notebooks/Exploratory Data Analysis.ipynb).  The happiness index data had no issues - no duplicates and no missing values. The temperature data contained some NULL values (around 4%), and the corresponding records were dropped before uploading to AWS S3. The tweet data, since being obtained from dynamic Twitter API, had standardization issues. For example, the location entries contained entries like "earth", some entries had city-country format and others had countries alone. If we process the tweet location data using some geographical tools, we could get the exact country location we wanted to.
+A quick data exploration and quality assessment was done on the datasets using Jupyter notebook [here](./notebooks/Exploratory_Data_Analysis.ipynb). The happiness index data had no issues - no duplicates and no missing values. The temperature data contained some NULL values (around 4%), and the correpysponding records were dropped before uploading to AWS S3. The tweet data, since being obtained from dynamic Twitter API, had standardization issues. For example, the location entries contained entries like "earth", some entries had city-country format and others had countries alone. If we process the tweet location data using some geographical tools, we could get the exact country location we wanted to.
 
 #### Define the Data Model
 
@@ -107,17 +107,35 @@ Implementing the data stores and data warehouses on the cloud brings in lots of 
 
 * Source/Count checks
 
-  Source count checks have been implemented in the Airflow DAGs using the CheckOperator and ValueCheckOperator. Since we already know the number of entries in the static datasets we could use the ValueCheckOperator to check all the entries have been inserted. Since we don't know the entries for dynamic tweet data we could use the CheckOperator  to check any entries have been made to the table.
+  Source count checks have been implemented in the Airflow DAGs using the CheckOperator and ValueCheckOperator. Since we already know the number of entries in the static datasets we could use the ValueCheckOperator to check all the entries have been inserted. Since we don't know the entries for dynamic tweet data we could use the CheckOperator to check any entries have been made to the table.
 
-### Built With
+### Tools and Technologies used
 
-* python
+* [python](https://www.python.org/)
 
-* Apache Airflow
+* [Apache Airflow](https://airflow.apache.org/) 
 
-* Amazon Web Services
+  Apache Airflow is an open-source tool for orchestrating complex computational workflows and data processing pipelines. It is a platform to programmatically author, schedule, and monitor workflows. When workflows are defined as code, they become more maintainable, versionable, testable, and collaborative. We use Airflow to author workflows as directed acyclic graphs (DAGs) of tasks. The Airflow scheduler executes your tasks on an array of workers while following the specified dependencies. Rich command line utilities make performing complex surgeries on DAGs a snap. The rich user interface makes it easy to visualize pipelines running in production, monitor progress, and troubleshoot issues when needed.
 
-  
+* [Amazon Web Services](https://aws.amazon.com/)
+
+  * [AWS Kinesis](https://aws.amazon.com/kinesis/)
+
+    Amazon Kinesis makes it easy to collect, process, and analyze real-time, streaming data so you can get timely insights and react quickly to new information. Amazon Kinesis offers key capabilities to cost-effectively process streaming data at any scale, along with the flexibility to choose the tools that best suit the requirements of your application. With Amazon Kinesis, we can ingest real-time data stream such as tweet data for machine learning, analytics, and other applications. Amazon Kinesis enables us to process and analyze data as it arrives and respond instantly instead of having to wait until all your data is collected before the processing can begin.
+
+  * [AWS Comprehend](https://aws.amazon.com/comprehend/)
+
+    Amazon Comprehend is a natural language processing (NLP) service that uses machine learning to find insights and relationships in text. We do not have to manually go through the process of training and deploying a machine learning model. In this project we use this tool for extracting sentiment of the Twitter tweet. The service identifies the language of the text; extracts key phrases, places, people, brands, or events; understands how positive or negative the text is; analyzes text using tokenization and parts of speech; and automatically organizes a collection of text files by topic. 
+
+  * [AWS S3](https://aws.amazon.com/s3/)
+
+    Amazon Simple Storage Service (Amazon S3) is an object storage service that offers industry-leading scalability, data availability, security, and performance. This means that we can use it to store and protect any amount of data for a range of use cases, such as big data analytics. Amazon S3 is designed for high of durability, and stores data for millions of applications for companies all around the world. In this project, we use this tool to store our static and dynamic datasets - acting as a data lake for our data. 
+
+  * [AWS Redshift](https://aws.amazon.com/redshift/)
+
+    Amazon Redshift is the most popular and fastest cloud data warehouse. Redshift is a fully-managed petabyte-scale cloud based data warehouse product designed for large scale data set storage and analysis. It is also used to perform large scale database migrations. Redshift’s column-oriented database is designed to connect to SQL-based clients and business intelligence tools, making data available to users in real time. In this project, we use this tool to warehouse our data so that we could easily scale it when necessary. 
+
+    
 
 ## Apache Airflow Orchestration 
 
@@ -142,7 +160,7 @@ The DAG dependency graph is given below.
 
 This section discusses strategies to deal with the following three key scenarios:
 
-1. Data is increased 100x.  
+1. Data is increased 100x. 
 2. Data pipeline is run on daily basis by 7 am every day.
 3. Database needs to be accessed by 100+ users simultaneously.
 
@@ -152,11 +170,11 @@ In this project we have used scalable, fully managed cloud services to store and
 
 #### 2. Data pipeline is run on a daily basis by 7 am every day
 
-As the static datasets do not change on a daily basis, the major challenge here is to process the a day's amount of captured tweets in an acceptable time.  AWS Kinesis stores the data in AWS S3 partitioned by yearly/monthly/daily/hourly blocks. This makes it easy to run tasks in parallel DAGs with reduced data volume. Hence, the entire data could be processed within the stipulated time.
+As the static datasets do not change on a daily basis, the major challenge here is to process the a day's amount of captured tweets in an acceptable time. AWS Kinesis stores the data in AWS S3 partitioned by yearly/monthly/daily/hourly blocks. This makes it easy to run tasks in parallel DAGs with reduced data volume. Hence, the entire data could be processed within the stipulated time.
 
 #### 3. Database needs to be accessed by 100+ users simultaneously
 
-We are using cloud based services, which can be easily given access to the 100+ users. If a group of users work on a specific subset of data or have an expensive query, we can also explore creating duplicate tables for them (if possible).  
+We are using cloud based services, which can be easily given access to the 100+ users. If a group of users work on a specific subset of data or have an expensive query, we can also explore creating duplicate tables for them (if possible). 
 
 
 
