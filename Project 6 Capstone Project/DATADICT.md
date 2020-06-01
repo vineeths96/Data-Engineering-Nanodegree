@@ -8,119 +8,120 @@ This file contains an overview of the attributes (columns), types and descriptio
 #### Staging Tweets
 
 | Column | Type | Description |
-| --- | --- | --- 
-| user_id | varchar | ID of Twitter user
-| name | varchar | "Real" name of Twitter user, e.g. Stefan Langenbach
-| nickname | varchar | Screename of Twitter user, e.g. @stefan
-| description | varchar | Bio of Twitter user
-| user_location | varchar | Location of Twitter user, e.g. Milan, Italy
-| followers_count | int | Number of followers of Twitter user
-| tweets_count | int | Number of tweets of Twitter user
-| user_date | timestamp | Date Twitter user was created
-| verified | bool | Whether the user is verified (small blue check sign)
-| tweet_id | varchar | ID of tweet
-| text | varchar | Text of tweet
-| favs | int | Number of times tweet is marked as favourite by other Twitter users
-| retweets | int | Number of times tweet is retweeted by other Twitter users
-| tweet_date | timestamp | Date tweet was created
-| tweet_location | varchar | Location the tweet was send from (if available)
-| source | varchar | Device/App used to create the tweet, e.g. Twitter for Android/iPhone, Twitter for Desktop, etc.
-| sentiment | varchar | Sentiment of the tweet's text as determined by AWS Comprehend (positive/neutral/negative)
+| --- | --- | --- |
+| user_id | VARCHAR | ID of Twitter user|
+| name | VARCHAR | "Real" name of the Twitter user, e.g. Vineeth S |
+| nickname | VARCHAR | Screen name of the Twitter user, e.g. @vineeths96 |
+| description | VARCHAR | Bio of the Twitter user |
+| user_location | VARCHAR | Location of the Twitter user, e.g. Milan, Italy |
+| followers_count | INT | Number of followers for the Twitter user |
+| tweets_count | INT | Number of tweets of the Twitter user |
+| user_date | TIMESTAMP | Date when the Twitter user was created |
+| verified | BOOL | Whether the user is verified (blue check sign) |
+| tweet_id | VARCHAR | ID of tweet|
+| text | VARCHAR | Text of tweet|
+| favs | INT | Number of times the tweet is marked as favorite by other Twitter users |
+| retweets | INT | Number of times the tweet is re-tweeted by other Twitter users |
+| tweet_date | TIMESTAMP | Date when tweet was created|
+| tweet_location | VARCHAR | Location where the tweet was send from (if available)|
+| source | VARCHAR | Device/App used to create the tweet, e.g. Twitter for Android/iPhone, Twitter for Desktop, etc.|
+| sentiment | VARCHAR | Sentiment of the tweet text as determined by AWS Comprehend (positive/neutral/negative) |
 
 #### Staging Happiness
 
 | Column | Type | Description |
-| --- | --- | --- 
-| country | varchar | Country happiness data has been collected on
-| rank | int | Position of country in happiness ranking
-| score | decimal | Happiness score
-| confidence_high | decimal | Upper bound of confidence interval for happiness score
-| confidence_low | decimal | Lower bound of confidence interval for happiness score
-| economy | decimal | Contribution of economic situation to happiness score
-| family | decimal | Contribution of family situation to happiness score
-| health | decimal | Contribution of life expectancy to happiness score
-| freedom | decimal | Contribution of personal/collective freedom to happiness score
-| trust | decimal | Contribution of corruption into situation to happiness score
-| generosity | decimal | Contribution of perceived generosity to happiness score
-| dystopia | decimal | Contribution of dystopia to happiness score
+| --- | --- | --- |
+| country | VARCHAR | Name of the country |
+| rank | INT | Position of the country in happiness ranking |
+| score | DECIMAL | Happiness score|
+| confidence_high | DECIMAL | Upper bound of confidence interval for happiness score |
+| confidence_low | DECIMAL | Lower bound of confidence Interval for happiness score |
+| economy | DECIMAL | Contribution of economic situation to happiness score|
+| family | DECIMAL | Contribution of family situation to happiness score|
+| health | DECIMAL | Contribution of life expectancy to happiness score|
+| freedom | DECIMAL | Contribution of personal/collective freedom to happiness score|
+| trust | DECIMAL | Contribution of corruption into situation to happiness score |
+| generosity | DECIMAL | Contribution of perceived generosity to happiness score|
+| dystopia | DECIMAL | Contribution of dystopia to happiness score|
 
 #### Staging Temperature
 
 | Column | Type | Description |
-| --- | --- | --- 
-date | timestamp | Date temperature was recorded
-temperature | decimal | Average temperature measured at recording date
-uncertainty | decimal | 95% confidence interval around average temperature
-country | varchar | Country where temperature was recorded
+| --- | --- | --- |
+|date | TIMESTAMP | Date when the temperature was recorded|
+|temperature | DECIMAL | Average temperature measured at recording date|
+|uncertainty | DECIMAL | 95% confidence interval around average temperature |
+|country | VARCHAR | Country where temperature was recorded|
 
 #### Users
 | Column | Type | Description |
-| --- | --- | --- 
-| user_id | varchar | c.f. staging_tweets
-| name | varchar | c.f. staging_tweets
-| nickname | varchar | c.f. staging_tweets
-| description | varchar | c.f. staging_tweets
-| location | varchar | c.f. user_location in staging_tweets
-| followers_count | int | c.f. staging_tweets
-| tweets_count | int | c.f. staging_tweets
-| creation_date | timestamp | c.f. user_date in staging_tweets
-| is_verified | bool | c.f. verified in staging_tweets
+| --- | --- | --- |
+| user_id | VARCHAR | ID of Twitter user |
+| name | VARCHAR | "Real" name of the Twitter user, e.g. Vineeth S |
+| nickname | VARCHAR | Screen name of the Twitter user, e.g. @vineeths96 |
+| description | VARCHAR | Bio of the Twitter user |
+| location | VARCHAR | Location of the Twitter user, e.g. Milan, Italy |
+| followers_count | INT | Number of followers for the Twitter user |
+| tweets_count | INT | Number of tweets of the Twitter user |
+| creation_date | TIMESTAMP | Date when the Twitter user was created |
+| is_verified | BOOL | Whether the user is verified (blue check sign) |
 
 #### Sources
 | Column | Type | Description |
-| --- | --- | --- 
-source_id | bigint | auto-incrementing ID of sources
-source | varchar | c.f. staging_tweets
-is_mobile | bool | Whether the source is a mobile device
-is_from_twitter | bool | Whether the source is made by Twitter or a third-party app, e.g. Tweetdeck
+| --- | --- | --- |
+|source_id | BIGINT | Auto-incrementing ID of sources|
+|source | VARCHAR | Device/App used to create the tweet, e.g. Twitter for Android/iPhone, Twitter for Desktop, etc. |
+|is_mobile | BOOL | Whether the source is a mobile device|
+|is_from_twitter | BOOL | Whether the source is made by Twitter or a third-party app, e.g. Tweetdeck|
 
 #### Happiness
 | Column | Type | Description |
-| --- | --- | ---
-| country | varchar | c.f. staging_happiness
-| rank | int | c.f. staging_happiness
-| score | decimal | c.f. staging_happiness
-| economy | decimal | c.f. staging_happiness
-| family | decimal | c.f. staging_happiness
-| health | decimal | c.f. staging_happiness
-| freedom | decimal | c.f. staging_happiness
-| trust | decimal | c.f. staging_happiness
-| generosity | decimal | c.f. staging_happiness
-| dystopia | decimal | c.f. staging_happiness
+| --- | --- | ---|
+| country | VARCHAR | Name of the country |
+| rank | INT | Position of the country in happiness ranking |
+| score | DECIMAL | Happiness score |
+| economy | DECIMAL | Contribution of economic situation to happiness score |
+| family | DECIMAL | Contribution of family situation to happiness score |
+| health | DECIMAL | Contribution of life expectancy to happiness score |
+| freedom | DECIMAL | Contribution of personal/collective freedom to happiness score |
+| trust | DECIMAL | Contribution of corruption into situation to happiness score |
+| generosity | DECIMAL | Contribution of perceived generosity to happiness score |
+| dystopia | DECIMAL | Contribution of dystopia to happiness score |
 
 #### Temperature
 | Column | Type | Description |
-| --- | --- | ---
-| country | varchar | c.f. staging_temperature
-| temp_last_20 | decimal | average temperature over the last 20 years
-| temp_last_50 | decimal | average temperature over the last 50 years
-| temp_last_100 | decimal | average temperature over the last 100 years
+| --- | --- | ---|
+| country | VARCHAR | Country where temperature was recorded |
+| temp_last_20 | DECIMAL | Average temperature over the last 20 years|
+| temp_last_50 | DECIMAL | Average temperature over the last 50 years|
+| temp_last_100 | DECIMAL | Average temperature over the last 100 years|
 
 #### Time
 | Column | Type | Description |
-| --- | --- | ---
-| date | timestamp | Union of distinct timestamps from user_date and tweet_date found in staging_tweets
-| second | int | Second derived from date
-| minute | int | Minute derived from date
-| hour | int | Hour derived from date
-| week | int | Calendar week derived from date
-| month | varchar | Month derived from date
-| year | int | Year derived from date
-| weekday | varchar | Weekday derived from date
+| --- | --- | ---|
+| date | TIMESTAMP | Union of distinct TIMESTAMPs from user_date and tweet_date found in staging_tweets|
+| second | INT | Second derived from date|
+| minute | INT | Minute derived from date|
+| hour | INT | Hour derived from date|
+| week | INT | Calendar week derived from date|
+| month | VARCHAR | Month derived from date|
+| year | INT | Year derived from date|
+| weekday | VARCHAR | Weekday derived from date|
 
 #### Tweets
 | Column | Type | Description |
-| --- | --- | ---
-| tweet_id | varchar | c.f. staging_tweets
-| text | varchar | c.f. staging_tweets
-| favs | int | c.f. staging_tweets
-| retweets | int | c.f. staging_tweets
-| creation_date | timestamp | c.f. tweet_date in staging_tweets
-| location | varchar | c.f. user_location in staging_tweets
-| user_id | varchar | c.f. staging_tweets
-| source | varchar | c.f. staging_tweets
-| happy_rank | int | Happiness rank of country from user who created the tweet
-| happy_score | int | Happiness score of country from user who created the tweet
-| temp_last_20 | decimal | Average temperature over last 20 years of country from user who created the tweet
-| temp_last_50 | decimal | Average temperature over last 50 years of country from user who created the tweet
-| temp_last_100 | decimal | Average temperature over last 100 years of country from user who created the tweet
+| --- | --- | ---|
+| tweet_id | VARCHAR | ID of tweet |
+| sentiment | VARCHAR | Sentiment of the tweet text as determined by AWS Comprehend (positive/neutral/negative) |
+| text | VARCHAR | Text of tweet |
+| favs | INT | Number of times the tweet is marked as favorite by other Twitter users |
+| retweets | INT | Number of times the tweet is re-tweeted by other Twitter users |
+| creation_date | TIMESTAMP | Date when tweet was created |
+| location | VARCHAR | Location of the Twitter user, e.g. Milan, Italy |
+| user_id | VARCHAR | ID of Twitter user |
+| source | VARCHAR | Device/App used to create the tweet, e.g. Twitter for Android/iPhone, Twitter for Desktop, etc. |
+| happy_rank | INT | Happiness rank of country from user who created the tweet|
+| happy_score | INT | Happiness score of country from user who created the tweet|
+| temp_last_20 | DECIMAL | Average temperature over last 20 years of country from user who created the tweet|
+| temp_last_50 | DECIMAL | Average temperature over last 50 years of country from user who created the tweet|
+| temp_last_100 | DECIMAL | Average temperature over last 100 years of country from user who created the tweet|

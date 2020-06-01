@@ -7,7 +7,7 @@
  <a href="https://github.com/vineeths96/Data-Engineering-Nanodegree">
  <img src="./images/logo.png" alt="Logo" width="250" height="125">
  </a>
- <h3 align="center">Twitter Sentiment Analysis</h3>
+ <h3 align="center">Twitter Data Topic Analysis</h3>
  <p align="center">
  Udacity Nanodegree Course Capstone Project
  <br />
@@ -16,6 +16,7 @@
  <br />
  </p>
 </p>
+
 
 
 > twitter, sentiment, s3, redshift, airflow, aws, data pipelines, data engineering, ETL 
@@ -268,14 +269,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 Vineeth S - vs96codes@gmail.com
 
 Project Link: [https://github.com/vineeths96/Data-Engineering-Nanodegree](https://github.com/vineeths96/Data-Engineering-Nanodegree)
-
-
-
-<!-- ACKNOWLEDGEMENTS -->
-
-## Acknowledgements
-
-* [Stefan Langenbach](https://github.com/slangenbach)
 
 
 
