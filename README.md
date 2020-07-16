@@ -42,41 +42,41 @@ During this program,  we will complete four courses and five projects. Throughou
 
 In this course,  we will learn to create relational and NoSQL data models to fit the diverse needs of data consumers. In the project,  we will build SQL (Postgres) and NoSQL (Apache Cassandra) data models using user activity data for a music streaming app.
 
-Associated notebooks for this course can be found [here](./Notebook Exercises).
+Associated notebooks for this course can be found [here](./Notebook-Exercises).
 
-Project 1 can be found [here](./Project 1 Data Modeling with PostgreSQL). 
+Project 1 can be found [here](./Project-1-Data-Modeling-with-PostgreSQL). 
 
-Project 2 can be found [here](./Project 2 Data Modeling with Apache Cassandra). 
+Project 2 can be found [here](./Project-2-Data-Modeling-with-Apache-Cassandra). 
 
 #### **Course 2 – Cloud Data Warehouses**
 
 In this course,  we will learn to create cloud-based data warehouses. In the project,  we will build an ELT pipeline that extracts data from Amazon S3, stages it in Amazon Redshift, and transforms it into a set of dimensional tables.
 
-Associated notebooks for this course can be found [here](./Notebook Exercises). 
+Associated notebooks for this course can be found [here](./Notebook-Exercises). 
 
-Project 3 can be found [here](./Project 3 Data Warehouse on AWS Redshift). 
+Project 3 can be found [here](./Project-3-Data-Warehouse-on-AWS-Redshift). 
 
 #### **Course 3 – Data Lakes with Apache Spark**
 
 In this course,  we will learn more about the big data ecosystem, how to work with massive datasets with Apache Spark, and how to store big data in a data lake. In the project,  we will build an ETL pipeline for a data lake using Apache Spark and S3.
 
-Associated notebooks for this course can be found [here](./Notebook Exercises).
+Associated notebooks for this course can be found [here](./Notebook-Exercises).
 
-Project 4 can be found [here](./Project 4 Data Lake on AWS S3). 
+Project 4 can be found [here](./Project-4-Data-Lake-on-AWS-S3). 
 
 #### **Course 4 – Data Pipelines with Apache Airflow**
 
 In this course,  we will learn to schedule, automate, and monitor data pipelines using Apache Airflow. In the project, they’ll continue your work on the music streaming company’s data infrastructure by creating and automating a set of data pipelines. 
 
-Associated notebooks for this course can be found [here](./Notebook Exercises).
+Associated notebooks for this course can be found [here](./Notebook-Exercises).
 
-Project 5 can be found [here](./Project 5 Data Pipelines with Apache Airflow). 
+Project 5 can be found [here](./Project-5-Data-Pipelines-with-Apache-Airflow). 
 
 #### **Capstone Project**
 
 In the Capstone project, we combine [Twitter](https://www.twitter.com) data, [World happiness index](https://www.kaggle.com/unsdsn/world-happiness) data and [Earth surface temperature data](https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data) data to explore whether there is any correlation between the above. The Twitter data is dynamic and the other two dataset are static in nature. The general idea of this project is to extract Twitter data, analyze  its sentiment and use the resulting data to gain insights with the other datasets. 
 
-Capstone Project can be found [here](./Project 6 Capstone Project).
+Capstone Project can be found [here](./Project-6-Capstone-Project).
 
  
 
